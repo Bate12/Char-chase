@@ -1,5 +1,7 @@
 import keyboard
 from time import time
+from colorama import just_fix_windows_console
+just_fix_windows_console()
 
 progressSize = 50
 maxScore = 100
@@ -15,6 +17,7 @@ class Clr:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+    RECORD = f'{BOLD}\033[37m'
 
 class Diff:
     EASY = 50
@@ -100,16 +103,16 @@ def showEndResults(score, timeElapsed, won):
 
     line()
     if won:
-        print(f"|\t\t\t|\n|\t{Clr.OKGREEN}Game won!{Clr.ENDC}\t|")
+        print(f"|\t\t\t\t|\n|\t{Clr.OKGREEN}Game won!{Clr.ENDC}\t\t|")
     else:
-        print(f"|\t\t\t|\n|\t{Clr.FAIL}Game lost!{Clr.ENDC}\t|")
+        print(f"|\t\t\t\t|\n|\t{Clr.FAIL}Game lost!{Clr.ENDC}\t\t|")
 
-    print(f"|\t\t\t|\n|\t{Clr.HEADER} time: {timeElapsed} s{Clr.ENDC}\t|\n|\t{Clr.HEADER} score: {score}{Clr.ENDC}\t|\n|\t\t\t|")
-    print(f"|{'_'*23}|\n")
+    print(f"|\t\t\t\t|\n|\t{Clr.HEADER} time: {timeElapsed} s{Clr.ENDC}\t\t|\n|\t{Clr.HEADER} score: {score}{Clr.ENDC}\t\t|\n|\t{Clr.RECORD} record: {0.1} s{Clr.ENDC}\t\t|")
+    print(f"|{'_'*31}|\n")
 
 
 def main():
-    print(f"\n\n{Clr.OKBLUE}Welcome to {Clr.BOLD}Char chase{Clr.ENDC}{Clr.OKBLUE}. Your goal is to press as many keys on your keyboard as possible.\n Info:\n{Clr.ENDC}")
+    print(f"\n\n{Clr.OKBLUE}Welcome to {Clr.BOLD}Char chase{Clr.ENDC}{Clr.OKBLUE}. Your goal is to press as many keys on your keyboard as possible.\n{Clr.WARNING}(If you don't see any colors, please paste{Clr.BOLD} reg add HKCU\Console /v VirtualTerminalLevel /t REG_DWORD /d 1 /f{Clr.ENDC}{Clr.WARNING} in your console on Windows)\n{Clr.OKBLUE}Info:\n{Clr.ENDC}")
 
     playGame()
     input()
