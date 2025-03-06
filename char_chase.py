@@ -1,5 +1,6 @@
 import keyboard
 from time import time
+from math import inf
 from colorama import just_fix_windows_console
 just_fix_windows_console()
 
@@ -107,9 +108,39 @@ def showEndResults(score, timeElapsed, won):
     else:
         print(f"|\t\t\t\t|\n|\t{Clr.FAIL}Game lost!{Clr.ENDC}\t\t|")
 
-    print(f"|\t\t\t\t|\n|\t{Clr.HEADER} time: {timeElapsed} s{Clr.ENDC}\t\t|\n|\t{Clr.HEADER} score: {score}{Clr.ENDC}\t\t|\n|\t{Clr.RECORD} record: {0.1} s{Clr.ENDC}\t\t|")
+    print(f"|\t\t\t\t|\n|\t{Clr.HEADER} time: {timeElapsed} s{Clr.ENDC}\t\t|\n|\t{Clr.HEADER} score: {score}{Clr.ENDC}\t\t|")
+    print("|\t\t\t\t|")
+
+    record = getRecord(maxScore)
+    isRecord = record > timeElapsed
+
+    recordMessage = f"|\t{Clr.RECORD} record: {record} s{Clr.ENDC}\t\t|"
+    if isRecord and won:
+        print(f"|\t{Clr.RECORD}NEW RECORD!!{Clr.ENDC}\t\t|")
+        recordMessage = f"|\t{Clr.RECORD} last record: {record} s{Clr.ENDC}\t|"
+
+    print(recordMessage)
     print(f"|{'_'*31}|\n")
 
+def getRecord(currentScore):
+    recordFile = open("records.txt")
+    bestScore = inf
+    for record in recordFile:
+        score, tim = record.split(";")
+        score = int(score)
+        tim = float(tim)
+        if score != currentScore:
+            #print(f"pokračujem dál score {score} currentScore {currentScore}")
+            continue
+        if tim < bestScore:
+            #print(f"{tim} je menší jak {bestScore}")
+            bestScore = tim
+    #print(f"Best score for this difficulty is {bestScore}")
+    recordFile.close()
+    return bestScore
+
+def setRecord():
+    pass
 
 def main():
     print(f"\n\n{Clr.OKBLUE}Welcome to {Clr.BOLD}Char chase{Clr.ENDC}{Clr.OKBLUE}. Your goal is to press as many keys on your keyboard as possible.\n{Clr.WARNING}(If you don't see any colors, please paste{Clr.BOLD} reg add HKCU\Console /v VirtualTerminalLevel /t REG_DWORD /d 1 /f{Clr.ENDC}{Clr.WARNING} in your console on Windows)\n{Clr.OKBLUE}Info:\n{Clr.ENDC}")
