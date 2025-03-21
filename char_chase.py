@@ -1,5 +1,5 @@
 import keyboard
-from time import time
+from time import time, sleep
 from math import inf
 from colorama import just_fix_windows_console
 just_fix_windows_console()
@@ -38,11 +38,9 @@ def deleteLastLine():
     print("\033[F", end="")
     print("\033[K", end="")
 
-def progressBar(progress, timeElapsed): # progress je mezi <0,1>
+def progressBar(progress, timeElapsed): # progress je mezi <0;1>
     if progress < 0 or progress > 1:
         return "Wrong progress input"
-    
-    progress = round(progress, 2)
     
     lineCount = int(progressSize * progress)
     spaceCount = progressSize - lineCount
@@ -56,8 +54,19 @@ def progressBar(progress, timeElapsed): # progress je mezi <0,1>
     else:
         color = Clr.OKGREEN
 
-    bar = f"{color}[{'|' * lineCount}{' ' * spaceCount}] {progress * 100} % {int(timeElapsed)} s{Clr.ENDC}"
+    bar = f"{color}[{'|' * lineCount}{' ' * spaceCount}] {round(progress * 100, 2)} % {int(timeElapsed)} s{Clr.ENDC}"
     return bar
+
+def startCountdown():
+    print(f"{Clr.WARNING}\t\t3")
+    sleep(1)
+    deleteLastLine()
+    print("\t\t2")
+    sleep(1)
+    deleteLastLine()
+    print(f"\t\t1{Clr.ENDC}")
+    sleep(1)
+    deleteLastLine()
 
 def playGame():
     global running
@@ -77,6 +86,8 @@ def playGame():
 
     score = 0
     running = True
+
+    startCountdown()
 
     print(f"{Clr.OKGREEN}\t\tSTART{Clr.ENDC}")
     line()
@@ -115,9 +126,12 @@ def showEndResults(score, timeElapsed, won):
     isRecord = record > timeElapsed
 
     recordMessage = f"|\t{Clr.RECORD} record: {record} s{Clr.ENDC}\t\t|"
+    #print(f"debug: isRecord {isRecord} AND won {won}")
     if isRecord and won:
         print(f"|\t{Clr.RECORD}NEW RECORD!!{Clr.ENDC}\t\t|")
         recordMessage = f"|\t{Clr.RECORD} last record: {record} s{Clr.ENDC}\t|"
+
+        setRecord(maxScore, timeElapsed)
 
     print(recordMessage)
     print(f"|{'_'*31}|\n")
@@ -139,8 +153,11 @@ def getRecord(currentScore):
     recordFile.close()
     return bestScore
 
-def setRecord():
-    pass
+def setRecord(score, time):
+    recordFile = open("records.txt", "a")
+    newRecord = f"{score};{time}\n"
+    recordFile.write(newRecord)
+    recordFile.close()
 
 def main():
     print(f"\n\n{Clr.OKBLUE}Welcome to {Clr.BOLD}Char chase{Clr.ENDC}{Clr.OKBLUE}. Your goal is to press as many keys on your keyboard as possible.\n{Clr.WARNING}(If you don't see any colors, please paste{Clr.BOLD} reg add HKCU\Console /v VirtualTerminalLevel /t REG_DWORD /d 1 /f{Clr.ENDC}{Clr.WARNING} in your console on Windows)\n{Clr.OKBLUE}Info:\n{Clr.ENDC}")
